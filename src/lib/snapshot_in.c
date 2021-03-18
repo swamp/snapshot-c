@@ -166,7 +166,7 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("read snapshot: %s", swampDumpToAsciiString(*outValue, foundType, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("read snapshot: %s", swampDumpToAsciiString(*outValue, foundType, 0, temp, TEMP_BUF_SIZE));
     }
 
     if (optionalExpectedType != 0) {

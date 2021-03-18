@@ -58,9 +58,11 @@ int main(int argc, char* argv[])
 #define BUF_SIZE (32*1024)
     char buf[BUF_SIZE];
 
-    int yamlFlags =  swampDumpFlagBlobAscii; // swampDumpFlagBlobExpanded | swampDumpFlagAlias
+    int yamlFlags = swampDumpFlagBlobExpanded; // swampDumpFlagBlobExpanded | swampDumpFlagAlias
     CLOG_OUTPUT("yaml:\n%s", swampDumpToYamlString(value, foundType, yamlFlags, buf, BUF_SIZE));
-    CLOG_OUTPUT("ascii:\n%s", swampDumpToAsciiString(value, foundType, buf, BUF_SIZE));
+
+    int asciiFlags = swampDumpFlagBlobExpanded | swampDumpFlagBlobAutoFormat;
+    CLOG_OUTPUT("ascii:\n%s", swampDumpToAsciiString(value, foundType, asciiFlags, buf, BUF_SIZE));
 
     return 0;
 }

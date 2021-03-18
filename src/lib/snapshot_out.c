@@ -64,7 +64,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const swamp_value* value
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("write snapshot: %s", swampDumpToAsciiString(value, stateType, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("write snapshot: %s", swampDumpToAsciiString(value, stateType, 0, temp, TEMP_BUF_SIZE));
     }
 
     SwtiChunk tempChunk;
