@@ -73,7 +73,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const swamp_value* value
 
     if (verbosity > 0) {
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("type info %s", swtiDebugString(stateType, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("type info %s", swtiDebugString(stateType, 0, temp, TEMP_BUF_SIZE));
     }
 
     int initResult = swtiChunkInitOnlyOneType(&tempChunk, stateType, &stateIndex);

@@ -155,7 +155,7 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
 
     if (verbosity) {
         char buf[2048];
-        CLOG_VERBOSE("found type %s", swtiDebugString(foundType, buf, 2048));
+        CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048));
     }
 
     int dumpError = readStateHeaderAndState(&inStream, allocator, foundType, outValue);
