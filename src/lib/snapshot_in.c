@@ -6,7 +6,7 @@
 #include <flood/in_stream.h>
 #include <swamp-typeinfo/chunk.h>
 #include <swamp-typeinfo/typeinfo.h>
-#include <swamp-typeinfo/deep_equal.h>
+#include <swamp-typeinfo/equal.h>
 #include <swamp-typeinfo/deserialize.h>
 #include <raff/raff.h>
 #include <raff/tag.h>
@@ -170,7 +170,7 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
     }
 
     if (optionalExpectedType != 0) {
-        int compareError = swtiTypeDeepEqual(foundType, optionalExpectedType);
+        int compareError = swtiTypeEqual(foundType, optionalExpectedType);
         if (compareError < 0) {
             *outValue = 0;
             return compareError;
