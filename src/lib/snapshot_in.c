@@ -93,7 +93,7 @@ static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIn
     return 0;
 }
 
-static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* allocator, const SwtiType* foundType, const swamp_value** outValue)
+static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* allocator, unmanagedTypeCreator creator, void* context, const SwtiType* foundType, const swamp_value** outValue)
 {
     RaffTag icon;
     RaffTag tag;
@@ -118,14 +118,14 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
     inStream->p += octetCount;
     inStream->pos += octetCount;
 
-    int dumpError = swampDumpFromOctets(inStream, allocator, foundType, outValue);
+    int dumpError = swampDumpFromOctets(inStream, allocator, foundType, creator, context, outValue);
 
     return dumpError;
 }
 
 
  int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, swamp_allocator* allocator,
-                                    const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType, const swamp_value** outValue, int verbosity)
+                                    unmanagedTypeCreator creator, void* context, const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType, const swamp_value** outValue, int verbosity)
 {
     FldInStream inStream;
     *outValue = 0;
@@ -158,7 +158,7 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
         CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048));
     }
 
-    int dumpError = readStateHeaderAndState(&inStream, allocator, foundType, outValue);
+    int dumpError = readStateHeaderAndState(&inStream, allocator, creator, context, foundType, outValue);
     if (dumpError < 0) {
         return dumpError;
     }

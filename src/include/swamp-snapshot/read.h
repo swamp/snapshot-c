@@ -11,6 +11,6 @@ struct swamp_allocator;
 struct SwtiChunk;
 
 int swsnSnapshotRead(const uint8_t* source, size_t count, struct swamp_allocator* allocator,
-    const SwtiType* optionalExpectedType, struct SwtiChunk* targetChunk, const struct SwtiType** foundType, const swamp_value** outValue, int verbosity);
+    unmanagedTypeCreator creator, void* context, const SwtiType* optionalExpectedType, struct SwtiChunk* targetChunk, const struct SwtiType** foundType, const swamp_value** outValue, int verbosity);
 
 #endif
