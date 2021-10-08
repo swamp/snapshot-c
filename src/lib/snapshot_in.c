@@ -4,23 +4,22 @@
  *--------------------------------------------------------------------------------------------*/
 #include <clog/clog.h>
 #include <flood/in_stream.h>
-#include <swamp-typeinfo/chunk.h>
-#include <swamp-typeinfo/typeinfo.h>
-#include <swamp-typeinfo/equal.h>
-#include <swamp-typeinfo/deserialize.h>
 #include <raff/raff.h>
 #include <raff/tag.h>
-#include <swamp-runtime/swamp.h>
-#include <swamp-runtime/allocator.h>
 #include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
+#include <swamp-runtime/swamp.h>
+#include <swamp-typeinfo/chunk.h>
+#include <swamp-typeinfo/deserialize.h>
+#include <swamp-typeinfo/equal.h>
+#include <swamp-typeinfo/typeinfo.h>
 
 int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
 {
     RaffTag foundIcon, foundName;
     uint32_t foundChunkSize;
-    int octets = raffReadChunkHeader(inStream->p, inStream->size - inStream->pos, foundIcon,
-                                     foundName, &foundChunkSize);
+    int octets = raffReadChunkHeader(inStream->p, inStream->size - inStream->pos, foundIcon, foundName,
+                                     &foundChunkSize);
     if (octets < 0) {
         return octets;
     }
@@ -38,8 +37,7 @@ int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
         return -4;
     }
 
-    int typeInformationOctetCount = swtiDeserialize(inStream->p, foundChunkSize,
-                                                    target);
+    int typeInformationOctetCount = swtiDeserialize(inStream->p, foundChunkSize, target);
     if (typeInformationOctetCount < 0) {
         return typeInformationOctetCount;
     }
@@ -50,7 +48,8 @@ int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
     return octets;
 }
 
-static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIndex) {
+static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIndex)
+{
     RaffTag fileIcon;
     RaffTag fileName;
 
@@ -60,7 +59,6 @@ static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIn
     }
     inStream->p += octetCount;
     inStream->pos += octetCount;
-
 
     RaffTag icon;
     RaffTag tag;
@@ -93,7 +91,8 @@ static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIn
     return 0;
 }
 
-static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* allocator, unmanagedTypeCreator creator, void* context, const SwtiType* foundType, const swamp_value** outValue)
+static int readStateHeaderAndState(FldInStream* inStream, unmanagedTypeCreator creator, void* context,
+                                   const SwtiType* foundType, const void** outValue)
 {
     RaffTag icon;
     RaffTag tag;
@@ -118,14 +117,14 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
     inStream->p += octetCount;
     inStream->pos += octetCount;
 
-    int dumpError = swampDumpFromOctets(inStream, allocator, foundType, creator, context, outValue);
+    int dumpError = swampDumpFromOctets(inStream, foundType, creator, context, outValue);
 
     return dumpError;
 }
 
-
- int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, swamp_allocator* allocator,
-                                    unmanagedTypeCreator creator, void* context, const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType, const swamp_value** outValue, int verbosity)
+int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTypeCreator creator, void* context,
+                     const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType,
+                     const void** outValue, int verbosity)
 {
     FldInStream inStream;
     *outValue = 0;
@@ -152,13 +151,12 @@ static int readStateHeaderAndState(FldInStream* inStream, swamp_allocator* alloc
 
     *outFoundType = foundType;
 
-
     if (verbosity) {
         char buf[2048];
         CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048));
     }
 
-    int dumpError = readStateHeaderAndState(&inStream, allocator, creator, context, foundType, outValue);
+    int dumpError = readStateHeaderAndState(&inStream, creator, context, foundType, outValue);
     if (dumpError < 0) {
         return dumpError;
     }

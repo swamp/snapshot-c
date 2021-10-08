@@ -7,7 +7,6 @@
 #include <raff/write.h>
 #include <raff/tag.h>
 #include <swamp-runtime/swamp.h>
-#include <swamp-runtime/allocator.h>
 #include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
 
@@ -58,7 +57,7 @@ static int writeRaffAndSnapshotChunks(FldOutStream* outStream, int rootTypeIndex
     return 0;
 }
 
-int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const swamp_value* value, const struct SwtiType* stateType,
+int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const struct SwtiType* stateType,
                      int verbosity)
 {
     if (verbosity > 0) {
