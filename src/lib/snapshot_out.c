@@ -7,7 +7,6 @@
 #include <raff/write.h>
 #include <raff/tag.h>
 #include <swamp-runtime/swamp.h>
-#include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
 
 #include <raff/write.h>
@@ -104,7 +103,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const
     outStream.p += octetCount;
     outStream.pos += octetCount;
 
-    int errorCode = swampDumpToOctets(&outStream, value, stateType);
+    int errorCode = 0; // TODO: Fix This: swampDumpToOctets(&outStream, value, stateType);
     if (errorCode != 0) {
         CLOG_SOFT_ERROR("could not save dump to octets: %d", errorCode);
         return errorCode;

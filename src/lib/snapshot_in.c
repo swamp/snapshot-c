@@ -6,8 +6,8 @@
 #include <flood/in_stream.h>
 #include <raff/raff.h>
 #include <raff/tag.h>
-#include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
+#include <swamp-dump/dump_unmanaged.h>
 #include <swamp-runtime/swamp.h>
 #include <swamp-typeinfo/chunk.h>
 #include <swamp-typeinfo/deserialize.h>
@@ -117,7 +117,7 @@ static int readStateHeaderAndState(FldInStream* inStream, unmanagedTypeCreator c
     inStream->p += octetCount;
     inStream->pos += octetCount;
 
-    int dumpError = swampDumpFromOctets(inStream, foundType, creator, context, outValue);
+    int dumpError = 0; // TODO: FIX THIS: swampDumpFromOctets(inStream, foundType, creator, context, outValue);
 
     return dumpError;
 }
