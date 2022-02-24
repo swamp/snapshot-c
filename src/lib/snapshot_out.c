@@ -5,11 +5,9 @@
 #include <swamp-typeinfo/serialize.h>
 #include <raff/raff.h>
 #include <raff/write.h>
-#include <raff/tag.h>
-#include <swamp-runtime/swamp.h>
 #include <swamp-dump/dump_ascii.h>
-
-#include <raff/write.h>
+#include <swamp-snapshot/write_typeinfo.h>
+#include <swamp-snapshot/write.h>
 
 int swsnWriteTypeInformationChunk(FldOutStream* stream, const SwtiChunk* chunk)
 {

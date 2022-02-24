@@ -13,6 +13,8 @@
 #include <swamp-typeinfo/deserialize.h>
 #include <swamp-typeinfo/equal.h>
 #include <swamp-typeinfo/typeinfo.h>
+#include <swamp-snapshot/read_typeinfo.h>
+#include <swamp-snapshot/read.h>
 
 int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
 {
@@ -145,7 +147,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
 
     const SwtiType* foundType = swtiChunkTypeFromIndex(targetChunk, typeIndex);
     if (foundType == 0) {
-        CLOG_SOFT_ERROR("could not find type %d", typeIndex);
+        CLOG_SOFT_ERROR("could not find type %d", typeIndex)
         return -4;
     }
 
@@ -153,7 +155,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
 
     if (verbosity) {
         char buf[2048];
-        CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048));
+        CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048))
     }
 
     int dumpError = readStateHeaderAndState(&inStream, creator, context, foundType, outValue);
@@ -164,7 +166,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("read snapshot: %s", swampDumpToAsciiString(*outValue, foundType, 0, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("read snapshot: %s", swampDumpToAsciiString(*outValue, foundType, 0, temp, TEMP_BUF_SIZE))
     }
 
     if (optionalExpectedType != 0) {
