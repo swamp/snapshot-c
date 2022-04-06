@@ -7,9 +7,12 @@
 
 struct SwtiType;
 struct SwtiChunk;
+struct SwampDynamicMemory;
+struct SwampUnmanagedMemory;
+
 
 int swsnSnapshotRead(const uint8_t* source, size_t count, unmanagedTypeCreator creator, void* context,
                      const SwtiType* optionalExpectedType, struct SwtiChunk* targetChunk,
-                     const struct SwtiType** foundType, const void** outValue, int verbosity);
+                     const struct SwtiType** foundType, const void** outValue, struct SwampDynamicMemory* memory, struct SwampUnmanagedMemory* unmanagedMemory, int verbosity);
 
 #endif

@@ -5,6 +5,9 @@
 #ifndef SWAMP_SNAPSHOT_SRC_INCLUDE_SWAMP_SNAPSHOT_READ_TYPEINFO_H
 #define SWAMP_SNAPSHOT_SRC_INCLUDE_SWAMP_SNAPSHOT_READ_TYPEINFO_H
 
-int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target);
+struct SwtiChunk;
+struct FldInStream;
+
+int swsnReadTypeInformationChunk(struct FldInStream* inStream, struct SwtiChunk* target);
 
 #endif // SWAMP_SNAPSHOT_SRC_INCLUDE_SWAMP_SNAPSHOT_READ_TYPEINFO_H

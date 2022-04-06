@@ -10,3 +10,7 @@ version = "*"
 [[dependencies]]
 name = 'swamp/typeinfo-c'
 version = "*"
+
+[[dependencies]]
+name = 'piot/swamp-script-state'
+version = "*"

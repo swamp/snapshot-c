@@ -1,19 +1,22 @@
 #include <clog/clog.h>
 #include <flood/out_stream.h>
-#include <swamp-typeinfo/chunk.h>
-#include <swamp-typeinfo/typeinfo.h>
-#include <swamp-typeinfo/serialize.h>
 #include <raff/raff.h>
 #include <raff/write.h>
+#include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
-#include <swamp-snapshot/write_typeinfo.h>
+
 #include <swamp-snapshot/write.h>
+#include <swamp-snapshot/write_typeinfo.h>
+#include <swamp-typeinfo/chunk.h>
+#include <swamp-typeinfo-serialize/serialize.h>
+#include <swamp-typeinfo/typeinfo.h>
+#include <swamp-script-state/state.h>
 
 int swsnWriteTypeInformationChunk(FldOutStream* stream, const SwtiChunk* chunk)
 {
     uint8_t typeInformationOctets[1024];
 
-    int payloadCount = swtiSerialize(typeInformationOctets, 1024, chunk);
+    int payloadCount = swtisSerialize(typeInformationOctets, 1024, chunk);
     if (payloadCount < 0) {
         return payloadCount;
     }
@@ -54,13 +57,12 @@ static int writeRaffAndSnapshotChunks(FldOutStream* outStream, int rootTypeIndex
     return 0;
 }
 
-int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const struct SwtiType* stateType,
-                     int verbosity)
+int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* scriptState, int verbosity)
 {
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("write snapshot: %s", swampDumpToAsciiString(value, stateType, 0, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("write snapshot: %s", swampDumpToAsciiString(scriptState->state, scriptState->debugType, 0, temp, TEMP_BUF_SIZE));
     }
 
     SwtiChunk tempChunk;
@@ -69,10 +71,10 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const
 
     if (verbosity > 0) {
         char temp[TEMP_BUF_SIZE];
-        CLOG_INFO("type info %s", swtiDebugString(stateType, 0, temp, TEMP_BUF_SIZE));
+        CLOG_INFO("type info %s", swtiDebugString(scriptState->debugType, 0, temp, TEMP_BUF_SIZE));
     }
 
-    int initResult = swtiChunkInitOnlyOneType(&tempChunk, stateType, &stateIndex);
+    int initResult = swtiChunkInitOnlyOneType(&tempChunk, scriptState->debugType, &stateIndex);
     if (initResult < 0) {
         CLOG_SOFT_ERROR("could not create a new type information chunk when writing %d", initResult);
         return initResult;
@@ -101,7 +103,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const
     outStream.p += octetCount;
     outStream.pos += octetCount;
 
-    int errorCode = 0; // TODO: Fix This: swampDumpToOctets(&outStream, value, stateType);
+    int errorCode = swampDumpToOctets(&outStream, scriptState->state, scriptState->debugType);
     if (errorCode != 0) {
         CLOG_SOFT_ERROR("could not save dump to octets: %d", errorCode);
         return errorCode;

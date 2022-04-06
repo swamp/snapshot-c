@@ -6,15 +6,16 @@
 #include <flood/in_stream.h>
 #include <raff/raff.h>
 #include <raff/tag.h>
+#include <swamp-dump/dump.h>
 #include <swamp-dump/dump_ascii.h>
 #include <swamp-dump/dump_unmanaged.h>
 #include <swamp-runtime/swamp.h>
+#include <swamp-snapshot/read.h>
+#include <swamp-snapshot/read_typeinfo.h>
 #include <swamp-typeinfo/chunk.h>
-#include <swamp-typeinfo/deserialize.h>
+#include <swamp-typeinfo-serialize/deserialize.h>
 #include <swamp-typeinfo/equal.h>
 #include <swamp-typeinfo/typeinfo.h>
-#include <swamp-snapshot/read_typeinfo.h>
-#include <swamp-snapshot/read.h>
 
 int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
 {
@@ -39,7 +40,7 @@ int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
         return -4;
     }
 
-    int typeInformationOctetCount = swtiDeserialize(inStream->p, foundChunkSize, target);
+    int typeInformationOctetCount = swtisDeserialize(inStream->p, foundChunkSize, target);
     if (typeInformationOctetCount < 0) {
         return typeInformationOctetCount;
     }
@@ -94,7 +95,7 @@ static int readRaffAndSnapshotChunkHeaders(FldInStream* inStream, int* outTypeIn
 }
 
 static int readStateHeaderAndState(FldInStream* inStream, unmanagedTypeCreator creator, void* context,
-                                   const SwtiType* foundType, const void** outValue)
+                                   const SwtiType* foundType, SwampDynamicMemory* dynamicMemory, struct SwampUnmanagedMemory* unmanagedMemory, const void** outValue)
 {
     RaffTag icon;
     RaffTag tag;
@@ -119,14 +120,14 @@ static int readStateHeaderAndState(FldInStream* inStream, unmanagedTypeCreator c
     inStream->p += octetCount;
     inStream->pos += octetCount;
 
-    int dumpError = 0; // TODO: FIX THIS: swampDumpFromOctets(inStream, foundType, creator, context, outValue);
+    int dumpError = swampDumpFromOctets(inStream, foundType, creator, context, outValue, dynamicMemory, unmanagedMemory);
 
     return dumpError;
 }
 
 int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTypeCreator creator, void* context,
                      const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType,
-                     const void** outValue, int verbosity)
+                     const void** outValue, struct SwampDynamicMemory* targetDynamicMemory, struct SwampUnmanagedMemory* targetUnmanagedMemory, int verbosity)
 {
     FldInStream inStream;
     *outValue = 0;
@@ -158,7 +159,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
         CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048))
     }
 
-    int dumpError = readStateHeaderAndState(&inStream, creator, context, foundType, outValue);
+    int dumpError = readStateHeaderAndState(&inStream, creator, context, foundType, targetDynamicMemory, targetUnmanagedMemory, outValue);
     if (dumpError < 0) {
         return dumpError;
     }

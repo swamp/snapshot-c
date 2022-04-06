@@ -5,9 +5,9 @@
 #ifndef SWSN_SNAPSHOT_WRITE_H
 #define SWSN_SNAPSHOT_WRITE_H
 
-struct SwtiType;
+struct SwampScriptState;
 
-int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const void* value, const struct SwtiType* stateType,
+int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const struct SwampScriptState* state,
                      int verbosity);
 
 #endif
