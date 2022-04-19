@@ -7,7 +7,8 @@
 
 struct SwtiChunk;
 struct FldInStream;
+struct ImprintAllocator;
 
-int swsnReadTypeInformationChunk(struct FldInStream* inStream, struct SwtiChunk* target);
+int swsnReadTypeInformationChunk(struct FldInStream* inStream, struct SwtiChunk* target, struct ImprintAllocator* allocator);
 
 #endif // SWAMP_SNAPSHOT_SRC_INCLUDE_SWAMP_SNAPSHOT_READ_TYPEINFO_H

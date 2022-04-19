@@ -57,7 +57,7 @@ static int writeRaffAndSnapshotChunks(FldOutStream* outStream, int rootTypeIndex
     return 0;
 }
 
-int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* scriptState, int verbosity)
+int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* scriptState, int verbosity, struct ImprintAllocator* allocator)
 {
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
@@ -74,7 +74,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* 
         CLOG_INFO("type info %s", swtiDebugString(scriptState->debugType, 0, temp, TEMP_BUF_SIZE));
     }
 
-    int initResult = swtiChunkInitOnlyOneType(&tempChunk, scriptState->debugType, &stateIndex);
+    int initResult = swtiChunkInitOnlyOneType(&tempChunk, scriptState->debugType, &stateIndex, allocator);
     if (initResult < 0) {
         CLOG_SOFT_ERROR("could not create a new type information chunk when writing %d", initResult);
         return initResult;

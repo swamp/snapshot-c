@@ -6,8 +6,10 @@
 #define SWSN_SNAPSHOT_WRITE_H
 
 struct SwampScriptState;
+struct ImprintAllocator;
+
 
 int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const struct SwampScriptState* state,
-                     int verbosity);
+                     int verbosity, struct ImprintAllocator* allocator);
 
 #endif

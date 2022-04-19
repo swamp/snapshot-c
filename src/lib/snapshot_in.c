@@ -16,8 +16,9 @@
 #include <swamp-typeinfo-serialize/deserialize.h>
 #include <swamp-typeinfo/equal.h>
 #include <swamp-typeinfo/typeinfo.h>
+#include <imprint/allocator.h>
 
-int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
+int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target, ImprintAllocator* allocator)
 {
     RaffTag foundIcon, foundName;
     uint32_t foundChunkSize;
@@ -40,7 +41,7 @@ int swsnReadTypeInformationChunk(FldInStream* inStream, SwtiChunk* target)
         return -4;
     }
 
-    int typeInformationOctetCount = swtisDeserialize(inStream->p, foundChunkSize, target);
+    int typeInformationOctetCount = swtisDeserialize(inStream->p, foundChunkSize, target, allocator);
     if (typeInformationOctetCount < 0) {
         return typeInformationOctetCount;
     }
@@ -127,7 +128,7 @@ static int readStateHeaderAndState(FldInStream* inStream, unmanagedTypeCreator c
 
 int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTypeCreator creator, void* context,
                      const SwtiType* optionalExpectedType, SwtiChunk* targetChunk, const SwtiType** outFoundType,
-                     const void** outValue, struct SwampDynamicMemory* targetDynamicMemory, struct SwampUnmanagedMemory* targetUnmanagedMemory, int verbosity)
+                     const void** outValue, struct SwampDynamicMemory* targetDynamicMemory, struct SwampUnmanagedMemory* targetUnmanagedMemory, int verbosity, ImprintAllocator* allocator)
 {
     FldInStream inStream;
     *outValue = 0;
@@ -141,7 +142,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
         return headerError;
     }
 
-    int worked = swsnReadTypeInformationChunk(&inStream, targetChunk);
+    int worked = swsnReadTypeInformationChunk(&inStream, targetChunk, allocator);
     if (worked < 0) {
         return worked;
     }
