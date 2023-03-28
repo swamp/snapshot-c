@@ -156,7 +156,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
     *outFoundType = foundType;
 
     if (verbosity) {
-        char buf[2048];
+        CLOG_EXECUTE(char buf[2048];)
         CLOG_VERBOSE("found type %s", swtiDebugString(foundType, 0, buf, 2048))
     }
 
@@ -167,7 +167,7 @@ int swsnSnapshotRead(const uint8_t* source, size_t sourceOctetCount, unmanagedTy
 
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
-        char temp[TEMP_BUF_SIZE];
+        CLOG_EXECUTE(char temp[TEMP_BUF_SIZE];)
         CLOG_INFO("read snapshot: %s", swampDumpToAsciiString(*outValue, foundType, 0, temp, TEMP_BUF_SIZE))
     }
 

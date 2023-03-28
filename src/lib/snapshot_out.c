@@ -61,7 +61,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* 
 {
     if (verbosity > 0) {
 #define TEMP_BUF_SIZE (8192)
-        char temp[TEMP_BUF_SIZE];
+        CLOG_EXECUTE(char temp[TEMP_BUF_SIZE];)
         CLOG_INFO("write snapshot: %s", swampDumpToAsciiString(scriptState->state, scriptState->debugType, 0, temp, TEMP_BUF_SIZE));
     }
 
@@ -70,7 +70,7 @@ int swsnSnapshotWrite(uint8_t* target, size_t maxCount, const SwampScriptState* 
     int stateIndex;
 
     if (verbosity > 0) {
-        char temp[TEMP_BUF_SIZE];
+        CLOG_EXECUTE(char temp[TEMP_BUF_SIZE];)
         CLOG_INFO("type info %s", swtiDebugString(scriptState->debugType, 0, temp, TEMP_BUF_SIZE));
     }
 
